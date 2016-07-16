@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en-US" ng-app='myapp'>
+	<head>
+		<title>CURD in AngularJS</title>
+		<!-- <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script> -->
+		<script type='text/javascript' src='js/angular.js'></script>
+	</head>
+	<body ng-controller='postsController'>
+		<h1>CURD in AngularJS</h1>
+	  	<table cellpadding='2' cellspacing='2' border='1'>
+	  		<tr>
+			    <th>Id</th>
+			    <th>Name</th>
+			    <th>Description</th>
+			    <th>Option</th>
+	     	</tr>
+	     	<tr ng-repeat="post in listPosts">
+	 			<td>{{post.id}}</td>
+	 			<td>{{post.name}}</td>
+	 			<td>{{post.description}}</td>
+	 			<td>
+	                <a href="#" ng-click='deletePost(post.id)'>Delete</a>|
+	                <a href="#" ng-click='editPost(post.id)'>Edit</a>
+	 			</td>
+			</tr>
+	  	</table>
+
+	  	<h3>Add OR Update Post</h3>
+	  	<table>
+		    <tr>
+		       <td>Id</td>
+		       <td><input type='text' ng-model='id'></td>
+		    </tr>
+		     <tr>
+		       <td>Name</td>
+		       <td><input type='text' ng-model='name'></td>
+		    </tr>
+		     <tr>
+		       <td>Description</td>
+		       <td><input type='text' ng-model='description'></td>
+		    </tr>
+		    <tr>
+		    	<td>&nbsp;</td>
+		    	<td>
+		           <input type='button' value='Add' ng-click='addPost()'>
+		           <input type='button' value='Update' ng-click='updatePost()'>
+		    	</td>
+		    </tr>
+	  	</table>
+	    <script type="text/javascript">
+	        var myapp = angular.module('myapp', []);
+	        myapp.controller('postsController', function($scope) {
+
+		        $scope.listPosts = [
+		            {id: 'po1', name: 'post 1', description: 'aaaa'},
+		            {id: 'po2', name: 'post 2', description: 'bbbb'},
+		            {id: 'po3', name: 'post 3', description: 'cccc'}
+		        ];
+
+	          	$scope.addPost = function(){
+	                $scope.listPosts.push({
+	                    id: $scope.id, name: $scope.name, description: $scope.description
+	                });
+	                $scope.id = '';
+	                $scope.name = '';
+					$scope.description = '';
+	          	};
+
+	          	$scope.updatePost = function(){
+	               var index = getSelectedIndex($scope.id)
+	               $scope.listPosts[index].name = $scope.name
+	               $scope.listPosts[index].description = $scope.description 
+
+	          	};
+
+		        $scope.deletePost = function(id) {
+		          	var result = confirm('Are you sure?')
+		          	if(result == true){
+		              var index = getSelectedIndex(id);
+		               $scope.listPosts.splice(index,1)  
+		          	}
+		        }
+		          
+		        function getSelectedIndex(id){
+		          	for(var i=0; i<$scope.listPosts.length; i++)
+		          		if($scope.listPosts[i].id == id)
+		                    return i;
+		            return -1
+		        }
+
+		        $scope.editPost = function(id) {
+		          	var index = getSelectedIndex(id)
+		          	var post = $scope.listPosts[index]
+		          	$scope.id = post.id
+		          	$scope.name = post.name
+		          	$scope.description = post.description
+		        }
+	    	});
+
+	    </script>
+	</body>
+</html>
